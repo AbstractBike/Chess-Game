@@ -18,6 +18,6 @@ class InvalidMovesTest {
 
     @Test
     void run() {
-        assertThat(chessRunner.getExitCode()).isEqualTo(1);
+        assertThat(chessRunner.getExitCode()).isEqualTo(3);
     }
 }

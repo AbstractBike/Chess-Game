@@ -20,7 +20,7 @@ import static org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX;
 
 @Slf4j
 @Service
-public class InputService {
+class InputService {
 
     List<Move> getMoves(String path) {
 
@@ -31,7 +31,7 @@ public class InputService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public Optional<String> getPath(String file) {
+    Optional<String> getPath(String file) {
         try {
             return Optional.of(ResourceUtils.getFile(CLASSPATH_URL_PREFIX + file).getAbsolutePath());
         } catch (FileNotFoundException e) {

@@ -27,23 +27,30 @@ public class ChessRunner implements CommandLineRunner, ExitCodeGenerator {
 
     @Override
     public void run(String... args) {
-        if (args.length != 1) {
-            log.info("usage: chessapp moves_file_path");
-            exitCode = 1;
-        } else {
-            String filename = args[0];
-            exitCode = inputService.getPath(filename)
-                    .map(this::playGame)
-                    .orElseGet(() -> {
-                        log.error("couldn't load the file: " + filename);
-                        return 2;
-                    });
-        }
-
+        exitCode = call(args);
     }
 
-    private int playGame(String arg) {
-        List<Move> moves = inputService.getMoves(arg);
+    private int call(String[] args) {
+        if (args.length != 1) {
+            log.info("usage: chessapp moves_file_path");
+            return 1;
+        }
+
+        return loadFileAndPlay(args[0]);
+    }
+
+    private int loadFileAndPlay(String filename) {
+        return inputService.getPath(filename)
+                .map(inputService::getMoves)
+                .map(this::playGame)
+                .orElseGet(() -> {
+                    log.error("couldn't load the file: " + filename);
+                    return 2;
+                });
+    }
+
+
+    private int playGame(List<Move> moves) {
 
         Game game = gameService.newGame();
 

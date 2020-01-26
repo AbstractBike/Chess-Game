@@ -30,6 +30,7 @@ public class CheckService {
 
 
     public boolean isCheck(Board nextBoardState, Coordinate lastMove) {
+
         Piece.Color currentColor = nextBoardState.getPiece(lastMove).getColor();
 
         Coordinate kingCoordinates = Iterables.getOnlyElement(nextBoardState.getCoordinates(Piece.getPiece(KING, currentColor.change())));
@@ -66,7 +67,7 @@ public class CheckService {
                         .anyMatch(from -> piece.legalMove(board, from, kingCoordinate)));
     }
 
-    private Coordinate getKingCoordinate(Board board, Piece.Color turn) {
-        return Iterables.getOnlyElement(board.getCoordinates(Piece.getPiece(KING, turn)));
+    private Coordinate getKingCoordinate(Board board, Piece.Color color) {
+        return Iterables.getOnlyElement(board.getCoordinates(Piece.getPiece(KING, color)));
     }
 }

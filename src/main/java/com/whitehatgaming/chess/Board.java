@@ -32,7 +32,7 @@ public class Board {
             Arrays.stream(Piece.values())
                     .collect(() -> new Piece[SIZE][SIZE],
                             (board, piece) -> piece.getInitialCoordinates()
-                                    .forEach(coordinate -> board[coordinate.getZeroIndexX()][coordinate.getZeroIndexY()] = piece),
+                                    .forEach(coordinate -> board[coordinate.getZeroIndexColumn()][coordinate.getZeroIndexRow()] = piece),
                             Streams::throwingMerger));
     @Getter
     private final Color nextTurn;
@@ -51,7 +51,7 @@ public class Board {
     }
 
     public Optional<Piece> findPiece(Coordinate c) {
-        return Optional.ofNullable(board[c.getZeroIndexX()][c.getZeroIndexY()]);
+        return Optional.ofNullable(board[c.getZeroIndexColumn()][c.getZeroIndexRow()]);
     }
 
     public Piece getPiece(Coordinate c) {
@@ -94,8 +94,8 @@ public class Board {
 
         Piece[][] newState = Arrays.stream(board).map(Piece[]::clone).toArray(Piece[][]::new);
 
-        newState[to.getZeroIndexX()][to.getZeroIndexY()] = newState[from.getZeroIndexX()][from.getZeroIndexY()];
-        newState[from.getZeroIndexX()][from.getZeroIndexY()] = null;
+        newState[to.getZeroIndexColumn()][to.getZeroIndexRow()] = newState[from.getZeroIndexColumn()][from.getZeroIndexRow()];
+        newState[from.getZeroIndexColumn()][from.getZeroIndexRow()] = null;
 
         return newState;
     }
@@ -126,10 +126,10 @@ public class Board {
     @Override
     public String toString() {
         return IntStreams.rangeClosed(SIZE - 1, 0)
-                .mapToObj(y -> IntStream.range(0, SIZE)
-                        .mapToObj(x -> Optional.ofNullable(board[x][y])
+                .mapToObj(r -> IntStream.range(0, SIZE)
+                        .mapToObj(c -> Optional.ofNullable(board[c][r])
                                 .map(Piece::getCode)
-                                .orElseGet(() -> (x + y) % 2 == 0 ? BLACK.getCode() : WHITE.getCode()))
+                                .orElseGet(() -> (c + r) % 2 == 0 ? BLACK.getCode() : WHITE.getCode()))
                         .map(String::valueOf)
                         .collect(joining("\t")))
                 .collect(joining("\n"));

@@ -8,35 +8,35 @@ import static com.whitehatgaming.chess.Board.SIZE;
 
 @EqualsAndHashCode
 public class Coordinate {
-    private final char x;
-    private final int y;
+    private final char column;
+    private final int row;
 
-    private Coordinate(char c, int y) {
-        char x = Character.toLowerCase(c);
-        Objects.checkIndex(y - 1, SIZE);
-        Objects.checkIndex(x - 'a', SIZE);
-        this.x = x;
-        this.y = y;
+    private Coordinate(char c, int row) {
+        char column = Character.toLowerCase(c);
+        Objects.checkIndex(row - 1, SIZE);
+        Objects.checkIndex(column - 'a', SIZE);
+        this.column = column;
+        this.row = row;
     }
 
-    public static Coordinate fromZeroIndex(int x, int y) {
-        return Coordinate.create((char) ('a' + x), y + 1);
+    public static Coordinate fromZeroIndex(int column, int row) {
+        return Coordinate.create((char) ('a' + column), row + 1);
     }
 
-    public static Coordinate fromZeroIndexReversedColumn(int x, int y) {
-        return Coordinate.create((char) ('a' + x), SIZE - y);
+    static Coordinate fromZeroIndexReversedColumn(int column, int row) {
+        return Coordinate.create((char) ('a' + column), SIZE - row);
     }
 
-    public int getZeroIndexX() {
-        return x - 'a';
+    public int getZeroIndexColumn() {
+        return column - 'a';
     }
 
-    public int getZeroIndexY() {
-        return y - 1;
+    public int getZeroIndexRow() {
+        return row - 1;
     }
 
-    public static Coordinate create(char x, int y) {
-        return new Coordinate(x, y);
+    public static Coordinate create(char column, int row) {
+        return new Coordinate(column, row);
     }
 
     public static Coordinate valueOf(String s) {
@@ -46,7 +46,7 @@ public class Coordinate {
 
     @Override
     public String toString() {
-        return String.format("%c%d", x, y);
+        return String.format("%c%d", column, row);
     }
 
 }

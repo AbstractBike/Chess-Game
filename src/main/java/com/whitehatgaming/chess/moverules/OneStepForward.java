@@ -21,6 +21,6 @@ public enum OneStepForward implements MoveRule {
     public boolean isApplicable(Board board, Coordinate from, Coordinate to) {
         return !isCapturing(board, to) &&
                 sameVertical(from, to) &&
-                stepsForwards(board, from, 1) == to.getZeroIndexY();
+                stepsForwards(board, from, 1) == to.getZeroIndexRow();
     }
 }

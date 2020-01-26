@@ -15,19 +15,19 @@ class MoveRules {
             Piece.Color.WHITE, Integer::sum,
             Piece.Color.BLACK, (from, steps) -> from - steps);
 
-    public static boolean isCapturing(Board board, Coordinate to) {
+    static boolean isCapturing(Board board, Coordinate to) {
         return board.findPiece(to).isPresent();
     }
 
-    public static boolean sameVertical(Coordinate a, Coordinate b) {
-        return a.getZeroIndexX() == b.getZeroIndexX();
+    static boolean sameVertical(Coordinate a, Coordinate b) {
+        return a.getZeroIndexColumn() == b.getZeroIndexColumn();
     }
 
-    public static boolean sameHorizontal(Coordinate a, Coordinate b) {
-        return a.getZeroIndexY() == b.getZeroIndexY();
+    static boolean sameHorizontal(Coordinate a, Coordinate b) {
+        return a.getZeroIndexRow() == b.getZeroIndexRow();
     }
 
-    public static int stepsForwards(Board board, Coordinate from, int steps) {
-        return FORWARD.get(board.getPiece(from).getColor()).applyAsInt(from.getZeroIndexY(), steps);
+    static int stepsForwards(Board board, Coordinate from, int steps) {
+        return FORWARD.get(board.getPiece(from).getColor()).applyAsInt(from.getZeroIndexRow(), steps);
     }
 }

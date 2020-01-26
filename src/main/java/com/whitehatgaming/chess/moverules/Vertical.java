@@ -14,8 +14,8 @@ public enum Vertical implements MoveRule {
 
     @Override
     public List<Coordinate> walk(Coordinate from, Coordinate to) {
-        return IntStreams.rangeClosed(from.getZeroIndexY(), to.getZeroIndexY()).skip(1)
-                .mapToObj(y -> Coordinate.fromZeroIndex(from.getZeroIndexX(), y))
+        return IntStreams.rangeClosed(from.getZeroIndexRow(), to.getZeroIndexRow()).skip(1)
+                .mapToObj(row -> Coordinate.fromZeroIndex(from.getZeroIndexColumn(), row))
                 .collect(Collectors.toUnmodifiableList());
     }
 

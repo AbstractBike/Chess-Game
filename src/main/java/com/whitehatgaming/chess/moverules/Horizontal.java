@@ -14,8 +14,8 @@ public enum Horizontal implements MoveRule {
 
     @Override
     public List<Coordinate> walk(Coordinate from, Coordinate to) {
-        return IntStreams.rangeClosed(from.getZeroIndexX(), to.getZeroIndexX()).skip(1)
-                .mapToObj(x -> Coordinate.fromZeroIndex(x, from.getZeroIndexY()))
+        return IntStreams.rangeClosed(from.getZeroIndexColumn(), to.getZeroIndexColumn()).skip(1)
+                .mapToObj(column -> Coordinate.fromZeroIndex(column, from.getZeroIndexRow()))
                 .collect(Collectors.toUnmodifiableList());
     }
 

@@ -13,14 +13,14 @@ class CoordinateTest {
     }
 
     @Test
-    void getZeroIndexX() {
-        assertThat(Coordinate.valueOf("h8").getZeroIndexX())
+    void getZeroIndexClumn() {
+        assertThat(Coordinate.valueOf("h8").getZeroIndexColumn())
                 .isEqualTo(7);
     }
 
     @Test
-    void getZeroIndexY() {
-        assertThat(Coordinate.valueOf("h8").getZeroIndexY())
+    void getZeroIndexRow() {
+        assertThat(Coordinate.valueOf("h8").getZeroIndexRow())
                 .isEqualTo(7);
     }
 

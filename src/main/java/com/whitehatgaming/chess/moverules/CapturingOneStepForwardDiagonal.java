@@ -19,8 +19,8 @@ public enum CapturingOneStepForwardDiagonal implements MoveRule {
     @Override
     public boolean isApplicable(Board board, Coordinate from, Coordinate to) {
         return isCapturing(board, to) &&
-                stepsForwards(board, from, 1) == to.getZeroIndexY() &&
-                Math.abs(to.getZeroIndexX() - from.getZeroIndexX()) == 1;
+                stepsForwards(board, from, 1) == to.getZeroIndexRow() &&
+                Math.abs(to.getZeroIndexColumn() - from.getZeroIndexColumn()) == 1;
     }
 
 

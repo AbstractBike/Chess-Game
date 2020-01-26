@@ -16,7 +16,7 @@ public enum OneStep implements MoveRule {
     @Override
     public boolean isApplicable(Board board, Coordinate from, Coordinate to) {
         return !to.equals(from) &&
-                Math.abs(from.getZeroIndexX() - to.getZeroIndexX()) <= 1 &&
-                Math.abs(from.getZeroIndexY() - to.getZeroIndexY()) <= 1;
+                Math.abs(from.getZeroIndexColumn() - to.getZeroIndexColumn()) <= 1 &&
+                Math.abs(from.getZeroIndexRow() - to.getZeroIndexRow()) <= 1;
     }
 }

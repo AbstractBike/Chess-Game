@@ -8,10 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX;
@@ -20,20 +22,26 @@ import static org.springframework.util.ResourceUtils.CLASSPATH_URL_PREFIX;
 @Service
 public class InputService {
 
-    List<Move> getMoves(String file) {
+    List<Move> getMoves(String path) {
 
-        return newUserInputFile(getPath(file)).stream()
+        return newUserInputFile(path).stream()
                 .map(move -> Move.of(
                         Coordinate.fromZeroIndexReversedColumn(move[0], move[1]),
                         Coordinate.fromZeroIndexReversedColumn(move[2], move[3])))
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private String getPath(String file) {
+    public Optional<String> getPath(String file) {
         try {
-            return ResourceUtils.getFile(CLASSPATH_URL_PREFIX + file).getAbsolutePath();
+            return Optional.of(ResourceUtils.getFile(CLASSPATH_URL_PREFIX + file).getAbsolutePath());
         } catch (FileNotFoundException e) {
-            return file;
+            try {
+                return Optional.of(ResourceUtils.getFile(file))
+                        .filter(File::exists)
+                        .map(File::getAbsolutePath);
+            } catch (FileNotFoundException ex) {
+                return Optional.empty();
+            }
         }
     }
 

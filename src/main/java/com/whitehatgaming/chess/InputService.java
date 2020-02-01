@@ -26,8 +26,8 @@ class InputService {
 
         return newUserInputFile(path).stream()
                 .map(move -> Move.of(
-                        Coordinate.fromZeroIndexReversedColumn(move[0], move[1]),
-                        Coordinate.fromZeroIndexReversedColumn(move[2], move[3])))
+                        Coordinate.fromZeroIndexReversedRow(move[0], move[1]),
+                        Coordinate.fromZeroIndexReversedRow(move[2], move[3])))
                 .collect(Collectors.toUnmodifiableList());
     }
 

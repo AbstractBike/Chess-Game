@@ -23,7 +23,7 @@ public class Coordinate {
         return Coordinate.create((char) ('a' + column), row + 1);
     }
 
-    static Coordinate fromZeroIndexReversedColumn(int column, int row) {
+    static Coordinate fromZeroIndexReversedRow(int column, int row) {
         return Coordinate.create((char) ('a' + column), SIZE - row);
     }
 

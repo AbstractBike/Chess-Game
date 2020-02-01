@@ -32,7 +32,7 @@ public class Board {
             Arrays.stream(Piece.values())
                     .collect(() -> new Piece[SIZE][SIZE],
                             (board, piece) -> piece.getInitialCoordinates()
-                                    .forEach(coordinate -> board[coordinate.getZeroIndexColumn()][coordinate.getZeroIndexRow()] = piece),
+                                    .forEach(coordinate -> board[coordinate.getZeroIndexRow()][coordinate.getZeroIndexColumn()] = piece),
                             Streams::throwingMerger));
     @Getter
     private final Color nextTurn;
@@ -51,7 +51,7 @@ public class Board {
     }
 
     public Optional<Piece> findPiece(Coordinate c) {
-        return Optional.ofNullable(board[c.getZeroIndexColumn()][c.getZeroIndexRow()]);
+        return Optional.ofNullable(board[c.getZeroIndexRow()][c.getZeroIndexColumn()]);
     }
 
     public Piece getPiece(Coordinate c) {
@@ -94,8 +94,8 @@ public class Board {
 
         Piece[][] newState = Arrays.stream(board).map(Piece[]::clone).toArray(Piece[][]::new);
 
-        newState[to.getZeroIndexColumn()][to.getZeroIndexRow()] = newState[from.getZeroIndexColumn()][from.getZeroIndexRow()];
-        newState[from.getZeroIndexColumn()][from.getZeroIndexRow()] = null;
+        newState[to.getZeroIndexRow()][to.getZeroIndexColumn()] = newState[from.getZeroIndexRow()][from.getZeroIndexColumn()];
+        newState[from.getZeroIndexRow()][from.getZeroIndexColumn()] = null;
 
         return newState;
     }
@@ -127,7 +127,7 @@ public class Board {
     public String toString() {
         return IntStreams.rangeClosed(SIZE - 1, 0)
                 .mapToObj(r -> IntStream.range(0, SIZE)
-                        .mapToObj(c -> Optional.ofNullable(board[c][r])
+                        .mapToObj(c -> Optional.ofNullable(board[r][c])
                                 .map(Piece::getCode)
                                 .orElseGet(() -> (c + r) % 2 == 0 ? BLACK.getCode() : WHITE.getCode()))
                         .map(String::valueOf)

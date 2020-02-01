@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.whitehatgaming.chess.ExitCode.ARGUMENT_ERROR;
+import static com.whitehatgaming.chess.ExitCode.FILE_ERROR;
+import static com.whitehatgaming.chess.ExitCode.ILLEGAL_MOVE_ERROR;
+import static com.whitehatgaming.chess.ExitCode.SUCCESS;
 import static java.util.stream.Collectors.toUnmodifiableList;
 
 @Slf4j
@@ -33,7 +37,7 @@ public class ChessRunner implements CommandLineRunner, ExitCodeGenerator {
     private int call(String[] args) {
         if (args.length != 1) {
             log.info("usage: chessapp moves_file_path");
-            return 1;
+            return ARGUMENT_ERROR.getCode();
         }
 
         return loadFileAndPlay(args[0]);
@@ -45,7 +49,7 @@ public class ChessRunner implements CommandLineRunner, ExitCodeGenerator {
                 .map(this::playGame)
                 .orElseGet(() -> {
                     log.error("couldn't load the file: " + filename);
-                    return 2;
+                    return FILE_ERROR.getCode();
                 });
     }
 
@@ -62,6 +66,6 @@ public class ChessRunner implements CommandLineRunner, ExitCodeGenerator {
                 })
                 .collect(toUnmodifiableList())
                 .stream()
-                .allMatch(Either::isRight) ? 0 : 3;
+                .allMatch(Either::isRight) ? SUCCESS.getCode() : ILLEGAL_MOVE_ERROR.getCode();
     }
 }

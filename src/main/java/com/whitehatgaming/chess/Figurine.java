@@ -12,18 +12,25 @@ import com.whitehatgaming.chess.moverules.Vertical;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
 public enum Figurine {
-    ROOK('R', Set.of(Vertical.INSTANCE, Horizontal.INSTANCE)),
-    KNIGHT('N', Set.of(L.INSTANCE)),
-    BISHOP('B', Set.of(Diagonal.INSTANCE)),
-    KING('K', Set.of(OneStep.INSTANCE)),
-    QUEEN('Q', Set.of(Vertical.INSTANCE, Horizontal.INSTANCE, Diagonal.INSTANCE)),
-    PAWN('P', Set.of(OneStepForward.INSTANCE, TwoStepForwardInitialState.INSTANCE, CapturingOneStepForwardDiagonal.INSTANCE));
+    ROOK('R', true, Set.of(Vertical.INSTANCE, Horizontal.INSTANCE)),
+    KNIGHT('N', false, Set.of(L.INSTANCE)),
+    BISHOP('B', true, Set.of(Diagonal.INSTANCE)),
+    KING('K', false, Set.of(OneStep.INSTANCE)),
+    QUEEN('Q', true, Set.of(Vertical.INSTANCE, Horizontal.INSTANCE, Diagonal.INSTANCE)),
+    PAWN('P', false, Set.of(OneStepForward.INSTANCE, TwoStepForwardInitialState.INSTANCE, CapturingOneStepForwardDiagonal.INSTANCE));
+
+    @Getter
+    private final static Set<Figurine> blockables = Arrays.stream(values()).filter(Figurine::isBlockable).collect(Collectors.toUnmodifiableSet());
 
     private final char code;
+    private final boolean blockable;
     private final Set<MoveRule> legalMoveRules;
+
 }

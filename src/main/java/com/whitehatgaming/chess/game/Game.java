@@ -36,9 +36,9 @@ public class Game {
 
         Board board = lastState.getBoard().move(move);
 
-        List<RuntimeException> posAssertionResult = postAssertionService.assertLegal(board, lastState.isCheck(), move.getTo());
-        if (!posAssertionResult.isEmpty()) {
-            return Either.left(posAssertionResult);
+        List<RuntimeException> postAssertionResult = postAssertionService.assertLegal(board, lastState.isCheck(), move.getTo());
+        if (!postAssertionResult.isEmpty()) {
+            return Either.left(postAssertionResult);
         }
 
         return Either.right(newState(board, move.getTo()));

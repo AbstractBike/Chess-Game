@@ -1,19 +1,21 @@
 package com.whitehatgaming.chess.moverules;
 
+import com.google.common.collect.Maps;
 import com.whitehatgaming.chess.Board;
 import com.whitehatgaming.chess.Coordinate;
 import com.whitehatgaming.chess.Piece;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.function.IntBinaryOperator;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 class MoveRules {
-    private static final Map<Piece.Color, IntBinaryOperator> FORWARD = Map.of(
+    private static final Map<Piece.Color, IntBinaryOperator> FORWARD = Collections.unmodifiableMap(Maps.newEnumMap(Map.of(
             Piece.Color.WHITE, Integer::sum,
-            Piece.Color.BLACK, (from, steps) -> from - steps);
+            Piece.Color.BLACK, (from, steps) -> from - steps)));
 
     static boolean isCapturing(Board board, Coordinate to) {
         return board.findPiece(to).isPresent();

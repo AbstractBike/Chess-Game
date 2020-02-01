@@ -5,14 +5,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-import static com.whitehatgaming.chess.Figurine.BISHOP;
 import static com.whitehatgaming.chess.Figurine.KING;
-import static com.whitehatgaming.chess.Figurine.QUEEN;
-import static com.whitehatgaming.chess.Figurine.ROOK;
 
 @Service
 public class CheckService {
-    private static final Set<Figurine> BLOCKABLE_FIGURES = Set.of(ROOK, QUEEN, BISHOP);
 
     public boolean isKingInCheckPosition(Board board, boolean wasKingInCheck, Coordinate to) {
 
@@ -61,7 +57,7 @@ public class CheckService {
     }
 
     private boolean canCaptureByBlockable(Board board, Piece.Color colorBlockableFigures, Coordinate kingCoordinate) {
-        return BLOCKABLE_FIGURES.stream()
+        return Figurine.getBlockables().stream()
                 .map(figurine -> Piece.getPiece(figurine, colorBlockableFigures))
                 .anyMatch(piece -> board.getCoordinates(piece).stream()
                         .anyMatch(from -> piece.legalMove(board, from, kingCoordinate)));

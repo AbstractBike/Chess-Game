@@ -1,8 +1,7 @@
 package com.whitehatgaming.chess.assertions;
 
-import com.whitehatgaming.chess.Board;
-import com.whitehatgaming.chess.CheckService;
-import com.whitehatgaming.chess.Coordinate;
+import com.whitehatgaming.chess.board.Board;
+import com.whitehatgaming.chess.check.CheckService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +13,9 @@ import java.util.List;
 public class PostAssertionService {
     private final CheckService checkService;
 
-    public List<RuntimeException> assertLegal(Board board, boolean wasKingInCheck, Coordinate to) {
+    public List<RuntimeException> assertLegal(Board board, boolean wasKingInCheck) {
 
-        if (checkService.isKingInCheckPosition(board, wasKingInCheck, to)) {
+        if (checkService.isKingInCheckPosition(board, wasKingInCheck)) {
             return Collections.singletonList(new IllegalMoveException("King is in a check position"));
         }
 

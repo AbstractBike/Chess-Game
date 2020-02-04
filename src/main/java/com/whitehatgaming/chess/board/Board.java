@@ -1,13 +1,19 @@
-package com.whitehatgaming.chess;
+package com.whitehatgaming.chess.board;
 
 import com.google.common.collect.Maps;
+import com.whitehatgaming.chess.IntStreams;
+import com.whitehatgaming.chess.Piece;
 import com.whitehatgaming.chess.Piece.Color;
+import com.whitehatgaming.chess.Streams;
 import com.whitehatgaming.chess.assertions.PieceNotFoundException;
 import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -37,13 +43,39 @@ public class Board {
     @Getter
     private final Color nextTurn;
     private final Map<Piece, Set<Coordinate>> pieces;
-
     private final Piece[][] board;
 
-    private Board(Color nextTurn, Map<Piece, Set<Coordinate>> pieces, Piece[][] state) {
+    private final Move move;
+    private final Board previousState;
+
+    private Board(Color nextTurn, Map<Piece, Set<Coordinate>> pieces, Piece[][] board) {
+        this(nextTurn, pieces, board, null, null);
+    }
+
+    private Board(Color nextTurn, Map<Piece, Set<Coordinate>> pieces, Piece[][] board, Board previousState, Move move) {
         this.nextTurn = nextTurn;
         this.pieces = pieces;
-        board = state;
+        this.board = board;
+        this.previousState = previousState;
+        this.move = move;
+    }
+
+    public boolean isInitialState() {
+        return Objects.isNull(move);
+    }
+
+    public Move getLastMove() {
+        return Optional.ofNullable(move)
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    public Board getPreviousState() {
+        return Optional.ofNullable(previousState)
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    public Iterator<Board> historyIterator() {
+        return BoardHistoryIterator.create(this);
     }
 
     public static Board initialState() {
@@ -66,12 +98,14 @@ public class Board {
         return move(Move.valueOf(move));
     }
 
-    private Board move(Coordinate from, Coordinate to) {
-        return new Board(nextTurn.change(), Collections.unmodifiableMap(movePieces(from, to)), moveArray(from, to));
-    }
 
     public Board move(Move move) {
-        return move(move.getFrom(), move.getTo());
+        return new Board(
+                nextTurn.change(),
+                movePieces(move),
+                moveArray(move),
+                this,
+                move);
     }
 
     public Map<Piece, Set<Coordinate>> getPieces(Color color) {
@@ -80,31 +114,36 @@ public class Board {
                 .collect(toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    private Map<Piece, Set<Coordinate>> movePieces(Coordinate from, Coordinate to) {
+    private Map<Piece, Set<Coordinate>> movePieces(Move move) {
 
         Map<Piece, Set<Coordinate>> newPieces = Maps.newEnumMap(pieces);
 
-        findPiece(to).ifPresent(capturedPiece -> remove(newPieces, capturedPiece, to));
-        move(newPieces, getPiece(from), from, to);
+        findPiece(move.getTo()).ifPresent(capturedPiece -> remove(newPieces, capturedPiece, move.getTo()));
+        move(newPieces, getPiece(move.getFrom()), move);
 
-        return newPieces;
+        return Collections.unmodifiableMap(newPieces);
     }
 
-    private Piece[][] moveArray(Coordinate from, Coordinate to) {
+    private Piece[][] moveArray(Move move) {
 
         Piece[][] newState = Arrays.stream(board).map(Piece[]::clone).toArray(Piece[][]::new);
 
-        newState[to.getZeroIndexRow()][to.getZeroIndexColumn()] = newState[from.getZeroIndexRow()][from.getZeroIndexColumn()];
-        newState[from.getZeroIndexRow()][from.getZeroIndexColumn()] = null;
+        int fromRow = move.getFrom().getZeroIndexRow();
+        int toRow = move.getTo().getZeroIndexRow();
+        int toColumn = move.getTo().getZeroIndexColumn();
+        int fromColumn = move.getFrom().getZeroIndexColumn();
+
+        newState[toRow][toColumn] = newState[fromRow][fromColumn];
+        newState[fromRow][fromColumn] = null;
 
         return newState;
     }
 
-    private void move(Map<Piece, Set<Coordinate>> pieces, Piece piece, Coordinate from, Coordinate to) {
+    private void move(Map<Piece, Set<Coordinate>> pieces, Piece piece, Move move) {
 
         pieces.compute(piece, (p, coordinates) -> Stream.concat(
-                Stream.of(to),
-                filter(requireNonNull(coordinates), from))
+                Stream.of(move.getTo()),
+                filter(requireNonNull(coordinates), move.getFrom()))
                 .collect(toUnmodifiableSet()));
     }
 
@@ -125,13 +164,14 @@ public class Board {
 
     @Override
     public String toString() {
-        return IntStreams.rangeClosed(SIZE - 1, 0)
-                .mapToObj(r -> IntStream.range(0, SIZE)
-                        .mapToObj(c -> Optional.ofNullable(board[r][c])
-                                .map(Piece::getCode)
-                                .orElseGet(() -> (c + r) % 2 == 0 ? BLACK.getCode() : WHITE.getCode()))
-                        .map(String::valueOf)
-                        .collect(joining("\t")))
+        return Stream.concat(IntStreams.rangeClosed(SIZE - 1, 0)
+                        .mapToObj(r -> (r + 1) + "\t " + IntStream.range(0, SIZE)
+                                .mapToObj(c -> Optional.ofNullable(board[r][c])
+                                        .map(Piece::getCode)
+                                        .orElseGet(() -> (c + r) % 2 == 0 ? BLACK.getCode() : WHITE.getCode()))
+                                .map(String::valueOf)
+                                .collect(joining("\t"))),
+                Stream.of(IntStream.range(0, SIZE).mapToObj(value -> (char) ('a' + value)).map(String::valueOf).collect(joining("\t", "\n\t ", ""))))
                 .collect(joining("\n"));
     }
 }

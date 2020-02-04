@@ -1,6 +1,7 @@
 package com.whitehatgaming.chess;
 
 import com.whitehatgaming.chess.assertions.ChessException;
+import com.whitehatgaming.chess.board.Move;
 import com.whitehatgaming.chess.game.Game;
 import com.whitehatgaming.chess.game.GameService;
 import io.vavr.control.Either;

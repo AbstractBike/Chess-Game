@@ -1,8 +1,7 @@
 package com.whitehatgaming.chess.assertions;
 
-import com.whitehatgaming.chess.Board;
-import com.whitehatgaming.chess.CheckService;
-import com.whitehatgaming.chess.Move;
+import com.whitehatgaming.chess.board.Board;
+import com.whitehatgaming.chess.check.CheckService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,20 +23,18 @@ class PostAssertionServiceTest {
 
     @Test
     void assertLegal() {
-        Move b2c3 = Move.valueOf("b2c3");
 
-        when(checkService.isKingInCheckPosition(board, false, b2c3.getTo())).thenReturn(false);
+        when(checkService.isKingInCheckPosition(board, false)).thenReturn(false);
 
-        assertThat(postAssertionService.assertLegal(board, false, b2c3.getTo())).isEmpty();
+        assertThat(postAssertionService.assertLegal(board, false)).isEmpty();
     }
 
     @Test
     void assertIllegal() {
-        Move b2c3 = Move.valueOf("b2c3");
 
-        when(checkService.isKingInCheckPosition(board, false, b2c3.getTo())).thenReturn(true);
+        when(checkService.isKingInCheckPosition(board, false)).thenReturn(true);
 
-        assertThat(postAssertionService.assertLegal(board, false, b2c3.getTo()))
+        assertThat(postAssertionService.assertLegal(board, false))
                 .hasSize(1)
                 .allMatch(e -> e instanceof IllegalMoveException);
     }

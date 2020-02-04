@@ -1,7 +1,7 @@
 package com.whitehatgaming.chess.moverules;
 
-import com.whitehatgaming.chess.Board;
-import com.whitehatgaming.chess.Coordinate;
+import com.whitehatgaming.chess.board.Board;
+import com.whitehatgaming.chess.board.Coordinate;
 
 import java.util.List;
 

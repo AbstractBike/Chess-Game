@@ -1,10 +1,10 @@
-package com.whitehatgaming.chess;
+package com.whitehatgaming.chess.board;
 
 import lombok.EqualsAndHashCode;
 
 import java.util.Objects;
 
-import static com.whitehatgaming.chess.Board.SIZE;
+import static com.whitehatgaming.chess.board.Board.SIZE;
 
 @EqualsAndHashCode
 public class Coordinate {
@@ -23,7 +23,7 @@ public class Coordinate {
         return Coordinate.create((char) ('a' + column), row + 1);
     }
 
-    static Coordinate fromZeroIndexReversedRow(int column, int row) {
+    public static Coordinate fromZeroIndexReversedRow(int column, int row) {
         return Coordinate.create((char) ('a' + column), SIZE - row);
     }
 

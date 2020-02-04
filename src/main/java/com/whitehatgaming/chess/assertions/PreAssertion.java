@@ -1,6 +1,6 @@
 package com.whitehatgaming.chess.assertions;
 
-import com.whitehatgaming.chess.Move;
+import com.whitehatgaming.chess.board.Move;
 import com.whitehatgaming.chess.game.State;
 
 import java.util.Optional;

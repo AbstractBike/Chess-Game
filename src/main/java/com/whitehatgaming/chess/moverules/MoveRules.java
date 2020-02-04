@@ -1,9 +1,10 @@
 package com.whitehatgaming.chess.moverules;
 
 import com.google.common.collect.Maps;
-import com.whitehatgaming.chess.Board;
-import com.whitehatgaming.chess.Coordinate;
 import com.whitehatgaming.chess.Piece;
+import com.whitehatgaming.chess.Streams;
+import com.whitehatgaming.chess.board.Board;
+import com.whitehatgaming.chess.board.Coordinate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -31,5 +32,12 @@ class MoveRules {
 
     static int stepsForwards(Board board, Coordinate from, int steps) {
         return FORWARD.get(board.getPiece(from).getColor()).applyAsInt(from.getZeroIndexRow(), steps);
+    }
+
+    static boolean isInitialState(Board board, Coordinate from) {
+        Piece piece = board.getPiece(from);
+        return Streams.sequentialStream(board::historyIterator)
+                .map(b -> b.getCoordinates(piece))
+                .allMatch(coordinates -> coordinates.contains(from));
     }
 }

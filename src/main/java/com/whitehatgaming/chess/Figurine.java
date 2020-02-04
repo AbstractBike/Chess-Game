@@ -1,6 +1,7 @@
 package com.whitehatgaming.chess;
 
 import com.whitehatgaming.chess.moverules.CapturingOneStepForwardDiagonal;
+import com.whitehatgaming.chess.moverules.Castling;
 import com.whitehatgaming.chess.moverules.Diagonal;
 import com.whitehatgaming.chess.moverules.Horizontal;
 import com.whitehatgaming.chess.moverules.L;
@@ -22,7 +23,7 @@ public enum Figurine {
     ROOK('R', true, Set.of(Vertical.INSTANCE, Horizontal.INSTANCE)),
     KNIGHT('N', false, Set.of(L.INSTANCE)),
     BISHOP('B', true, Set.of(Diagonal.INSTANCE)),
-    KING('K', false, Set.of(OneStep.INSTANCE)),
+    KING('K', false, Set.of(OneStep.INSTANCE, Castling.INSTANCE)),
     QUEEN('Q', true, Set.of(Vertical.INSTANCE, Horizontal.INSTANCE, Diagonal.INSTANCE)),
     PAWN('P', false, Set.of(OneStepForward.INSTANCE, TwoStepForwardInitialState.INSTANCE, CapturingOneStepForwardDiagonal.INSTANCE));
 

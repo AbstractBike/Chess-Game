@@ -1,5 +1,7 @@
 package com.whitehatgaming.chess;
 
+import com.whitehatgaming.chess.board.Board;
+import com.whitehatgaming.chess.board.Coordinate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -62,14 +64,16 @@ class BoardTest {
         assertThat(Board.initialState()
                 .move("a2a4")
                 .toString()).isEqualTo(
-                "r\tn\tb\tq\tk\tb\tn\tr\n" +
-                        "p\tp\tp\tp\tp\tp\tp\tp\n" +
-                        "-\t*\t-\t*\t-\t*\t-\t*\n" +
-                        "*\t-\t*\t-\t*\t-\t*\t-\n" +
-                        "P\t*\t-\t*\t-\t*\t-\t*\n" +
-                        "*\t-\t*\t-\t*\t-\t*\t-\n" +
-                        "-\tP\tP\tP\tP\tP\tP\tP\n" +
-                        "R\tN\tB\tQ\tK\tB\tN\tR");
+                "8\t r\tn\tb\tq\tk\tb\tn\tr\n" +
+                        "7\t p\tp\tp\tp\tp\tp\tp\tp\n" +
+                        "6\t -\t*\t-\t*\t-\t*\t-\t*\n" +
+                        "5\t *\t-\t*\t-\t*\t-\t*\t-\n" +
+                        "4\t P\t*\t-\t*\t-\t*\t-\t*\n" +
+                        "3\t *\t-\t*\t-\t*\t-\t*\t-\n" +
+                        "2\t -\tP\tP\tP\tP\tP\tP\tP\n" +
+                        "1\t R\tN\tB\tQ\tK\tB\tN\tR\n" +
+                        "\n" +
+                        "\t a\tb\tc\td\te\tf\tg\th");
     }
 
     @Test

@@ -1,5 +1,7 @@
 package com.whitehatgaming.chess;
 
+import com.whitehatgaming.chess.board.Board;
+import com.whitehatgaming.chess.board.Coordinate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -53,6 +55,9 @@ public enum Piece {
     }
 
     public boolean legalMove(Board board, Coordinate from, Coordinate to) {
+        if (sameColorFromTo(board, from, to) ||
+                from.equals(to)) return false;
+
         List<Coordinate> coordinates = walk(board, from, to);
 
         if (coordinates.isEmpty()) return false;
@@ -63,7 +68,13 @@ public enum Piece {
                 .noneMatch(Optional::isPresent);
     }
 
-    private List<Coordinate> walk(Board board, Coordinate from, Coordinate to) {
+    private Boolean sameColorFromTo(Board board, Coordinate from, Coordinate to) {
+        return board.findPiece(to)
+                .map(piece -> piece.getColor() == board.getPiece(from).getColor())
+                .orElse(false);
+    }
+
+    public List<Coordinate> walk(Board board, Coordinate from, Coordinate to) {
         return figurine.getLegalMoveRules().stream()
                 .filter(move -> move.isApplicable(board, from, to))
                 .findFirst().stream()

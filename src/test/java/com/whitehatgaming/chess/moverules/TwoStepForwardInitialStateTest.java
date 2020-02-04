@@ -1,13 +1,14 @@
 package com.whitehatgaming.chess.moverules;
 
-import com.whitehatgaming.chess.Board;
-import com.whitehatgaming.chess.Coordinate;
 import com.whitehatgaming.chess.Piece;
+import com.whitehatgaming.chess.board.Board;
+import com.whitehatgaming.chess.board.Coordinate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,6 +35,7 @@ class TwoStepForwardInitialStateTest {
 
         when(board.getPiece(from)).thenReturn(Piece.WHITE_PAWN);
         when(board.findPiece(to)).thenReturn(Optional.empty());
+        when(board.historyIterator()).thenReturn(Collections.singleton(Board.initialState()).iterator());
 
         assertThat(twoStepForwardInitialState.isApplicable(board, from, to)).isTrue();
     }
@@ -46,6 +48,7 @@ class TwoStepForwardInitialStateTest {
 
         when(board.getPiece(from)).thenReturn(Piece.WHITE_PAWN);
         when(board.findPiece(to)).thenReturn(Optional.empty());
+        when(board.historyIterator()).thenReturn(Collections.singleton(Board.initialState()).iterator());
 
         assertThat(twoStepForwardInitialState.isApplicable(board, from, to)).isFalse();
     }

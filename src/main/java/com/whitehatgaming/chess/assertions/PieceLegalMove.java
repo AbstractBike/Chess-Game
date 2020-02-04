@@ -1,8 +1,8 @@
 package com.whitehatgaming.chess.assertions;
 
-import com.whitehatgaming.chess.Board;
-import com.whitehatgaming.chess.Move;
 import com.whitehatgaming.chess.Piece;
+import com.whitehatgaming.chess.board.Board;
+import com.whitehatgaming.chess.board.Move;
 import com.whitehatgaming.chess.game.State;
 import lombok.Getter;
 import org.springframework.stereotype.Component;

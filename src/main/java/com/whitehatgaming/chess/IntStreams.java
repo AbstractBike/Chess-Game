@@ -14,4 +14,11 @@ public class IntStreams {
         }
         return IntStream.rangeClosed(startInclusive, endInclusive);
     }
+
+    public static IntStream range(int startInclusive, int endInclusive) {
+        if (startInclusive > endInclusive) {
+            return IntStream.iterate(startInclusive, value -> value > endInclusive, i -> i - 1);
+        }
+        return IntStream.range(startInclusive, endInclusive);
+    }
 }

@@ -2,7 +2,8 @@ package com.whitehatgaming.chess;
 
 import com.whitehatgaming.UserInput;
 import com.whitehatgaming.UserInputFile;
-import lombok.RequiredArgsConstructor;
+import com.whitehatgaming.chess.board.Coordinate;
+import com.whitehatgaming.chess.board.Move;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -50,25 +51,40 @@ class InputService {
         return UserInputIterable.create(new UserInputFile(file));
     }
 
-    @RequiredArgsConstructor(staticName = "create")
     private static class UserInputIterable implements SequentialStreamIterator<int[]> {
         private final UserInput userInput;
         private int[] nextMove;
 
+        private UserInputIterable(UserInput userInput) {
+            this.userInput = userInput;
+            nextMove = iterate();
+        }
+
+        static UserInputIterable create(UserInput userInput) {
+            return new UserInputIterable(userInput);
+        }
+
         @Override
         public boolean hasNext() {
-            try {
-                nextMove = userInput.nextMove();
-            } catch (IOException e) {
-                log.warn("operation=errorReadingInput", e);
-                return false;
-            }
             return Objects.nonNull(nextMove);
         }
 
         @Override
         public int[] next() {
-            return nextMove;
+            int[] next = nextMove;
+
+            nextMove = iterate();
+
+            return next;
+        }
+
+        private int[] iterate() {
+            try {
+                return userInput.nextMove();
+            } catch (IOException e) {
+                log.warn("operation=errorReadingInput", e);
+                return null;
+            }
         }
     }
 }

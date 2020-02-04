@@ -1,8 +1,8 @@
 package com.whitehatgaming.chess.moverules;
 
-import com.whitehatgaming.chess.Board;
-import com.whitehatgaming.chess.Coordinate;
 import com.whitehatgaming.chess.Piece;
+import com.whitehatgaming.chess.board.Board;
+import com.whitehatgaming.chess.board.Coordinate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

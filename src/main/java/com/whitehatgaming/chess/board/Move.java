@@ -1,4 +1,4 @@
-package com.whitehatgaming.chess;
+package com.whitehatgaming.chess.board;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

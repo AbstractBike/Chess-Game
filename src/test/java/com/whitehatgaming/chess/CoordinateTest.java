@@ -1,5 +1,6 @@
 package com.whitehatgaming.chess;
 
+import com.whitehatgaming.chess.board.Coordinate;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -8,7 +8,7 @@ import java.util.stream.StreamSupport;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
-class Streams {
+public class Streams {
     public static <T> T throwingMerger(T t, T t1) {
         throw new UnsupportedOperationException();
     }

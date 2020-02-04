@@ -1,8 +1,8 @@
 package com.whitehatgaming.chess.game;
 
-import com.whitehatgaming.chess.CheckService;
 import com.whitehatgaming.chess.assertions.PostAssertionService;
 import com.whitehatgaming.chess.assertions.PreAssertionService;
+import com.whitehatgaming.chess.check.CheckService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

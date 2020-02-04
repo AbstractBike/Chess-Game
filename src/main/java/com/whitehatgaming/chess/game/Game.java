@@ -2,12 +2,11 @@ package com.whitehatgaming.chess.game;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.whitehatgaming.chess.Board;
-import com.whitehatgaming.chess.CheckService;
-import com.whitehatgaming.chess.Coordinate;
-import com.whitehatgaming.chess.Move;
 import com.whitehatgaming.chess.assertions.PostAssertionService;
 import com.whitehatgaming.chess.assertions.PreAssertionService;
+import com.whitehatgaming.chess.board.Board;
+import com.whitehatgaming.chess.board.Move;
+import com.whitehatgaming.chess.check.CheckService;
 import io.vavr.control.Either;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,7 +22,7 @@ public class Game {
     private final PostAssertionService postAssertionService;
     private final CheckService checkService;
     @Getter
-    private final List<State> history = Lists.newArrayList(State.create(Board.initialState(), false));
+    private final List<State> history = Lists.newArrayList(State.initialState());
 
     public Either<List<RuntimeException>, State> move(Move move) {
 
@@ -36,16 +35,21 @@ public class Game {
 
         Board board = lastState.getBoard().move(move);
 
-        List<RuntimeException> postAssertionResult = postAssertionService.assertLegal(board, lastState.isCheck(), move.getTo());
+        List<RuntimeException> postAssertionResult = postAssertionService.assertLegal(board, lastState.isCheck());
         if (!postAssertionResult.isEmpty()) {
             return Either.left(postAssertionResult);
         }
 
-        return Either.right(newState(board, move.getTo()));
+        return Either.right(newState(board));
     }
 
-    private State newState(Board board, Coordinate to) {
-        State newState = State.create(board, checkService.isCheck(board, to));
+    private State newState(Board board) {
+        boolean check = checkService.isCheck(board);
+        State newState = State.builder()
+                .board(board)
+                .check(check)
+                .checkMate(check && checkService.isCheckMate(board))
+                .build();
 
         history.add(newState);
 

@@ -1,10 +1,10 @@
 package com.whitehatgaming.chess.game;
 
-import com.whitehatgaming.chess.Board;
-import com.whitehatgaming.chess.CheckService;
-import com.whitehatgaming.chess.Move;
 import com.whitehatgaming.chess.assertions.PostAssertionService;
 import com.whitehatgaming.chess.assertions.PreAssertionService;
+import com.whitehatgaming.chess.board.Board;
+import com.whitehatgaming.chess.board.Move;
+import com.whitehatgaming.chess.check.CheckService;
 import io.vavr.control.Either;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,8 +39,8 @@ class GameTest {
 
         when(preAssertionService.assertLegal(any(State.class), eq(a2a4)))
                 .thenReturn(Collections.emptyList());
-        when(postAssertionService.assertLegal(any(Board.class), eq(false), eq(a2a4.getTo()))).thenReturn(Collections.emptyList());
-        when(checkService.isCheck(any(Board.class), eq(a2a4.getTo()))).thenReturn(false);
+        when(postAssertionService.assertLegal(any(Board.class), eq(false))).thenReturn(Collections.emptyList());
+        when(checkService.isCheck(any(Board.class))).thenReturn(false);
 
         assertThat(game.move(a2a4)).is(newCondition(Either::isRight));
     }
@@ -62,7 +62,7 @@ class GameTest {
 
         when(preAssertionService.assertLegal(any(State.class), eq(a2a4)))
                 .thenReturn(Collections.emptyList());
-        when(postAssertionService.assertLegal(any(Board.class), eq(false), eq(a2a4.getTo())))
+        when(postAssertionService.assertLegal(any(Board.class), eq(false)))
                 .thenReturn(List.of(new RuntimeException()));
 
         assertThat(game.move(a2a4)).is(newCondition(Either::isLeft));

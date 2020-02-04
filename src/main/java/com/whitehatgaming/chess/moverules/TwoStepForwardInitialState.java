@@ -1,13 +1,14 @@
 package com.whitehatgaming.chess.moverules;
 
-import com.whitehatgaming.chess.Board;
-import com.whitehatgaming.chess.Coordinate;
 import com.whitehatgaming.chess.IntStreams;
+import com.whitehatgaming.chess.board.Board;
+import com.whitehatgaming.chess.board.Coordinate;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.whitehatgaming.chess.moverules.MoveRules.isCapturing;
+import static com.whitehatgaming.chess.moverules.MoveRules.isInitialState;
 import static com.whitehatgaming.chess.moverules.MoveRules.sameVertical;
 import static com.whitehatgaming.chess.moverules.MoveRules.stepsForwards;
 
@@ -29,7 +30,4 @@ public enum TwoStepForwardInitialState implements MoveRule {
                 sameVertical(from, to);
     }
 
-    private boolean isInitialState(Board board, Coordinate from) {
-        return board.getPiece(from).getInitialCoordinates().contains(from);
-    }
 }

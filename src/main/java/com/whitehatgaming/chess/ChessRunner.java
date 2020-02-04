@@ -3,7 +3,7 @@ package com.whitehatgaming.chess;
 import com.whitehatgaming.chess.assertions.ChessException;
 import com.whitehatgaming.chess.board.Move;
 import com.whitehatgaming.chess.game.Game;
-import com.whitehatgaming.chess.game.GameService;
+import com.whitehatgaming.chess.game.GameFactory;
 import io.vavr.control.Either;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 @Service
 @RequiredArgsConstructor
 public class ChessRunner implements CommandLineRunner, ExitCodeGenerator {
-    private final GameService gameService;
+    private final GameFactory gameFactory;
     private final InputService inputService;
 
     @Getter
@@ -57,7 +57,7 @@ public class ChessRunner implements CommandLineRunner, ExitCodeGenerator {
 
     private int playGame(List<Move> moves) {
 
-        Game game = gameService.newGame();
+        Game game = gameFactory.newGame();
 
         return moves.stream()
                 .map(game::move)

@@ -27,8 +27,10 @@ public class CheckService {
 
         Coordinate kingCoordinate = getKingCoordinate(board, color);
 
-        return (shouldAllPiecesBeTested(wasKingInCheck, lastMove, kingCoordinate) && canCapture(board, color.change(), kingCoordinate))
-                || canCaptureByBlockable(board, color.change(), kingCoordinate);
+        if (shouldAllPiecesBeTested(wasKingInCheck, lastMove, kingCoordinate)) {
+            return canCapture(board, color.change(), kingCoordinate);
+        }
+        return canCaptureByBlockable(board, color.change(), kingCoordinate);
     }
 
     private boolean shouldAllPiecesBeTested(boolean wasKingInCheck, Coordinate to, Coordinate kingCoordinate) {
@@ -95,7 +97,8 @@ public class CheckService {
     }
 
     private Set<Coordinate> getAttackingPath(Board board, Coordinate kingCoordinate, Coordinate attackingPiece) {
-        return Stream.concat(Stream.of(attackingPiece), board.getPiece(attackingPiece).walk(board, attackingPiece, kingCoordinate)
+        return Stream.concat(Stream.of(attackingPiece), board.getPiece(attackingPiece)
+                .walk(board, attackingPiece, kingCoordinate)
                 .stream()
                 .filter(coordinate -> !kingCoordinate.equals(coordinate)))
                 .collect(Collectors.toUnmodifiableSet());

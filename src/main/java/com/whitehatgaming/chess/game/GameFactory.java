@@ -4,11 +4,11 @@ import com.whitehatgaming.chess.assertions.PostAssertionService;
 import com.whitehatgaming.chess.assertions.PreAssertionService;
 import com.whitehatgaming.chess.check.CheckService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class GameService {
+public class GameFactory {
     private final PreAssertionService preAssertionService;
     private final PostAssertionService postAssertionService;
     private final CheckService checkService;

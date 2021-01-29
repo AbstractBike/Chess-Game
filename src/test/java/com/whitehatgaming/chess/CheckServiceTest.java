@@ -1,14 +1,22 @@
 package com.whitehatgaming.chess;
 
 import com.whitehatgaming.chess.board.Board;
+import com.whitehatgaming.chess.check.CaptureService;
 import com.whitehatgaming.chess.check.CheckService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(MockitoExtension.class)
 class CheckServiceTest {
-
-    private final CheckService checkService = new CheckService();
+    @Spy
+    CaptureService captureService;
+    @InjectMocks
+    CheckService checkService;
 
     @Test
     void isKingInCheckPosition() {

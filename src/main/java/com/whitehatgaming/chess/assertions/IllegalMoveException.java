@@ -1,7 +1,7 @@
 package com.whitehatgaming.chess.assertions;
 
-class IllegalMoveException extends RuntimeException {
-    IllegalMoveException(String message) {
+public class IllegalMoveException extends RuntimeException {
+    public IllegalMoveException(String message) {
         super(message);
     }
 }

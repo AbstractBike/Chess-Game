@@ -1,7 +1,9 @@
 package com.whitehatgaming.chess;
 
+import com.whitehatgaming.chess.assertions.IllegalMoveException;
 import com.whitehatgaming.chess.board.Board;
 import com.whitehatgaming.chess.board.Coordinate;
+import com.whitehatgaming.chess.moverules.MoveRule;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -75,11 +77,21 @@ public enum Piece {
     }
 
     public List<Coordinate> walk(Board board, Coordinate from, Coordinate to) {
-        return figurine.getLegalMoveRules().stream()
-                .filter(move -> move.isApplicable(board, from, to))
-                .findFirst().stream()
+        return findRule(board, from, to).stream()
                 .flatMap(move -> move.walk(from, to).stream())
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public Board move(Board board, Coordinate from, Coordinate to) {
+        return findRule(board, from, to)
+                .map(moveRule -> moveRule.move(board, from, to))
+                .orElseThrow(() -> new IllegalMoveException("Illegal move:" + from + to));
+    }
+
+    private Optional<MoveRule> findRule(Board board, Coordinate from, Coordinate to) {
+        return figurine.getLegalMoveRules().stream()
+                .filter(moveRule -> moveRule.isApplicable(board, from, to))
+                .findFirst();
     }
 
     public static Piece getPiece(Figurine figurine, Color color) {

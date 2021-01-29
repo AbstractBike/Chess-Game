@@ -1,12 +1,12 @@
 package com.whitehatgaming.chess.check;
 
 import com.google.common.collect.Iterables;
-import com.whitehatgaming.chess.Figurine;
 import com.whitehatgaming.chess.Piece;
 import com.whitehatgaming.chess.board.Board;
 import com.whitehatgaming.chess.board.Coordinate;
 import com.whitehatgaming.chess.board.Move;
 import io.vavr.Tuple;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +18,9 @@ import java.util.stream.Stream;
 import static com.whitehatgaming.chess.Figurine.KING;
 
 @Service
+@RequiredArgsConstructor
 public class CheckService {
+    private final CaptureService captureService;
 
     public boolean isKingInCheckPosition(Board board, boolean wasKingInCheck) {
 
@@ -28,9 +30,9 @@ public class CheckService {
         Coordinate kingCoordinate = getKingCoordinate(board, color);
 
         if (shouldAllPiecesBeTested(wasKingInCheck, lastMove, kingCoordinate)) {
-            return canCapture(board, color.change(), kingCoordinate);
+            return captureService.canCapture(board, color.change(), kingCoordinate);
         }
-        return canCaptureByBlockable(board, color.change(), kingCoordinate);
+        return captureService.canCaptureByBlockable(board, color.change(), kingCoordinate);
     }
 
     private boolean shouldAllPiecesBeTested(boolean wasKingInCheck, Coordinate to, Coordinate kingCoordinate) {
@@ -45,35 +47,13 @@ public class CheckService {
 
         Coordinate kingCoordinates = Iterables.getOnlyElement(nextBoardState.getCoordinates(Piece.getPiece(KING, currentColor.change())));
 
-        return canCapture(nextBoardState, lastMove, kingCoordinates)
-                || canCaptureByBlockable(nextBoardState, currentColor, kingCoordinates);
+        return captureService.canCapture(nextBoardState, lastMove, kingCoordinates)
+                || captureService.canCaptureByBlockable(nextBoardState, currentColor, kingCoordinates);
     }
 
-    public boolean canCapture(Board board, Piece.Color color, Coordinate coordinate) {
-        return board.getPieces(color).entrySet().stream()
-                .anyMatch(pieceEntry -> canCapture(board, pieceEntry.getKey(), pieceEntry.getValue(), coordinate));
-    }
-
-    private boolean canCapture(Board board, Piece piece, Set<Coordinate> coordinates, Coordinate to) {
-        return coordinates.stream()
-                .anyMatch(from -> piece.legalMove(board, from, to));
-    }
 
     private boolean isKingMove(Coordinate to, Coordinate kingCoordinate) {
         return kingCoordinate.equals(to);
-    }
-
-    private boolean canCapture(Board board, Coordinate from, Coordinate to) {
-        return board.findPiece(from)
-                .filter(piece -> piece.legalMove(board, from, to))
-                .isPresent();
-    }
-
-    private boolean canCaptureByBlockable(Board board, Piece.Color colorBlockableFigures, Coordinate kingCoordinate) {
-        return Figurine.getBlockables().stream()
-                .map(figurine -> Piece.getPiece(figurine, colorBlockableFigures))
-                .anyMatch(piece -> board.getCoordinates(piece).stream()
-                        .anyMatch(from -> piece.legalMove(board, from, kingCoordinate)));
     }
 
     private Coordinate getKingCoordinate(Board board, Piece.Color color) {

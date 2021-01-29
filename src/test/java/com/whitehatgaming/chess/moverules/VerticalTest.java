@@ -1,5 +1,6 @@
 package com.whitehatgaming.chess.moverules;
 
+import com.whitehatgaming.chess.IntStreams;
 import com.whitehatgaming.chess.board.Board;
 import com.whitehatgaming.chess.board.Coordinate;
 import org.junit.jupiter.api.Test;
@@ -50,5 +51,17 @@ class VerticalTest {
     void isNotApplicable() {
         assertThat(vertical.isApplicable(board, Coordinate.valueOf("a1"), Coordinate.valueOf("c3")))
                 .isFalse();
+    }
+
+    @Test
+    void walk() {
+    }
+
+    @Test
+    void possibleMoves() {
+        Coordinate from = Coordinate.valueOf("d5");
+        System.out.println(Board.initialState());
+        IntStreams.rangeClosed(0, from.getZeroIndexRow() + from.getZeroIndexColumn());
+
     }
 }

@@ -165,13 +165,13 @@ public class Board {
     @Override
     public String toString() {
         return Stream.concat(IntStreams.rangeClosed(SIZE - 1, 0)
-                        .mapToObj(r -> (r + 1) + "\t " + IntStream.range(0, SIZE)
+                        .mapToObj(r -> (r) + "\t" + IntStream.range(0, SIZE)
                                 .mapToObj(c -> Optional.ofNullable(board[r][c])
                                         .map(Piece::getCode)
                                         .orElseGet(() -> (c + r) % 2 == 0 ? BLACK.getCode() : WHITE.getCode()))
                                 .map(String::valueOf)
                                 .collect(joining("\t"))),
-                Stream.of(IntStream.range(0, SIZE).mapToObj(value -> (char) ('a' + value)).map(String::valueOf).collect(joining("\t", "\n\t ", ""))))
+                Stream.of(IntStream.range(0, SIZE).boxed().map(String::valueOf).collect(joining("\t", "\n\t", ""))))
                 .collect(joining("\n"));
     }
 }

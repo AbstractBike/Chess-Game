@@ -4,7 +4,8 @@ import com.whitehatgaming.chess.IntStreams;
 import com.whitehatgaming.chess.Piece;
 import com.whitehatgaming.chess.board.Board;
 import com.whitehatgaming.chess.board.Coordinate;
-import com.whitehatgaming.chess.check.CheckService;
+import com.whitehatgaming.chess.board.Move;
+import com.whitehatgaming.chess.check.CaptureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,21 +23,27 @@ public enum Castling implements MoveRule {
     @Component
     @RequiredArgsConstructor
     private static class CheckServiceInjector {
-        private final CheckService checkService;
+        private final CaptureService captureService;
 
         @PostConstruct
         public void postConstruct() {
-            INSTANCE.checkService = checkService;
+            INSTANCE.captureService = captureService;
         }
     }
 
-    private CheckService checkService;
+    private CaptureService captureService;
 
     private final static Map<Coordinate, Coordinate> LINK_ROOK = Map.of(
-            Coordinate.valueOf("e1"), Coordinate.valueOf("a1"),
+            Coordinate.valueOf("c1"), Coordinate.valueOf("a1"),
             Coordinate.valueOf("g1"), Coordinate.valueOf("h1"),
-            Coordinate.valueOf("e8"), Coordinate.valueOf("a8"),
+            Coordinate.valueOf("c8"), Coordinate.valueOf("a8"),
             Coordinate.valueOf("g8"), Coordinate.valueOf("h8"));
+
+    private final static Map<Coordinate, Coordinate> LINK_ROOK_MOVE_COORDINATE = Map.of(
+            Coordinate.valueOf("c1"), Coordinate.valueOf("d1"),
+            Coordinate.valueOf("g1"), Coordinate.valueOf("f1"),
+            Coordinate.valueOf("c8"), Coordinate.valueOf("d8"),
+            Coordinate.valueOf("g8"), Coordinate.valueOf("f8"));
 
     @Override
     public List<Coordinate> walk(Coordinate from, Coordinate to) {
@@ -46,6 +53,7 @@ public enum Castling implements MoveRule {
                 .mapToObj(column -> Coordinate.fromZeroIndex(column, from.getZeroIndexRow()))
                 .collect(Collectors.toUnmodifiableList());
     }
+
 
     @Override
     public boolean isApplicable(Board board, Coordinate from, Coordinate to) {
@@ -57,6 +65,12 @@ public enum Castling implements MoveRule {
                 safeKingPath(board, from, to);
     }
 
+    @Override
+    public Board move(Board board, Coordinate from, Coordinate to) {
+        return board.move(Move.of(from, to))
+                .move(Move.of(LINK_ROOK.get(to), LINK_ROOK_MOVE_COORDINATE.get(to)));
+    }
+
     private boolean rookInInitialState(Board board, Coordinate linkRook) {
         return board.findPiece(linkRook).filter(rook -> isInitialState(board, linkRook)).isPresent();
     }
@@ -65,6 +79,6 @@ public enum Castling implements MoveRule {
         Piece.Color kingColor = board.getPiece(from).getColor();
         return IntStreams.rangeClosed(from.getZeroIndexColumn(), to.getZeroIndexColumn())
                 .mapToObj(column -> Coordinate.fromZeroIndex(column, from.getZeroIndexRow()))
-                .noneMatch(coordinate -> checkService.canCapture(board, kingColor.change(), coordinate));
+                .noneMatch(coordinate -> captureService.canCapture(board, kingColor.change(), coordinate));
     }
 }

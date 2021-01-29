@@ -2,6 +2,7 @@ package com.whitehatgaming.chess.game;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.whitehatgaming.chess.Piece;
 import com.whitehatgaming.chess.assertions.PostAssertionService;
 import com.whitehatgaming.chess.assertions.PreAssertionService;
 import com.whitehatgaming.chess.board.Board;
@@ -33,7 +34,8 @@ public class Game {
             return Either.left(preAssertionsResult);
         }
 
-        Board board = lastState.getBoard().move(move);
+        Board board = getPiece(move, lastState)
+                .move(lastState.getBoard(), move.getFrom(), move.getTo());
 
         List<RuntimeException> postAssertionResult = postAssertionService.assertLegal(board, lastState.isCheck());
         if (!postAssertionResult.isEmpty()) {
@@ -41,6 +43,10 @@ public class Game {
         }
 
         return Either.right(newState(board));
+    }
+
+    private Piece getPiece(Move move, State lastState) {
+        return lastState.getBoard().getPiece(move.getFrom());
     }
 
     private State newState(Board board) {
